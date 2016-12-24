@@ -3,6 +3,10 @@
     body: null,
     elem: null,
     target: null,
+    events: {
+      open: new Event('heyOpen'),
+      close: new Event('heyClose'),
+    },
     content: {
       title: null,
       body: null,
@@ -15,6 +19,9 @@
       this.build();
       this.removeTarget();
       this.bindEvents();
+    },
+    on (event, action) {
+      this.comp.wrapper.addEventListener(event, action);
     },
     build () {
       const c = {};
@@ -63,7 +70,7 @@
       // TODO could probably be re-written to accommodate mix of JS/non-js content, or just made simpler
       for (const el in this.content) {
         if (!this.content[el]) {
-          const domElem = self.target.querySelector(`[data-modal-${el}]`);
+          const domElem = self.target.querySelector(`[data-hey-${el}]`);
 
           if (domElem) {
             self.content[el] = domElem.innerHTML;
@@ -74,7 +81,7 @@
       }
     },
     setTarget() {
-      const dataTarget = this.elem.getAttribute('data-modal');
+      const dataTarget = this.elem.getAttribute('data-hey');
 
       // If a data attribute is set with a target
       if (dataTarget) {
@@ -86,21 +93,32 @@
       this.target.remove();
     },
     bindEvents() {
+      // Open on target click
       this.elem.addEventListener('click', e => {
         e.preventDefault();
         this.open();
       });
 
+      // Close events on wrapper/close button
       this.comp.wrapper.addEventListener('click', this.close.bind(this));
       this.comp.closeBtn.addEventListener('click', this.close.bind(this));
 
+      // Clicking inner modal components shouldn't close the modal
       this.comp.dialog.addEventListener('click', (e) => {
         e.stopPropagation();
+      });
+
+      // Close with the escape key
+      window.addEventListener('keydown', e => {
+        if (e.keyCode == '27') {
+          this.close();
+        }
       });
     },
     open() {
       this.comp.wrapper.classList.add(this.visibleClass);
       this.setPageScroll(false);
+      this.comp.wrapper.dispatchEvent(this.events.open);
     },
     close() {
       this.comp.wrapper.classList.remove(this.visibleClass);
@@ -108,6 +126,7 @@
       const closeOver = () => {
         this.setPageScroll(true);
         this.comp.wrapper.removeEventListener('transitionend', closeOver);
+        this.comp.wrapper.dispatchEvent(this.events.close);
       };
 
       this.comp.wrapper.addEventListener('transitionend', closeOver);
@@ -141,4 +160,20 @@ const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger')
   content: {
     title: 'Lesser title override',
   },
+});
+
+// myModal.comp.wrapper.addEventListener('heyOpen', () => {
+//   console.log('open!');
+// });
+//
+// myModal.comp.wrapper.addEventListener('heyClose', () => {
+//   console.log('close!');
+// });
+
+myModal.on('heyOpen', () => {
+  console.log('opening!');
+});
+
+myModal.on('heyClose', () => {
+  console.log('closing!');
 });
