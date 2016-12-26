@@ -16,9 +16,13 @@
     init () {
       this.body = document.querySelector('body');
       this.setTarget();
-      this.build();
-      this.removeTarget();
-      this.bindEvents();
+
+      // Only proceed if we have a valid target
+      if (this.checkTarget()) {
+        this.build();
+        this.removeTarget();
+        this.bindEvents();
+      }
     },
     on (event, action) {
       this.comp.wrapper.addEventListener(event, action);
@@ -81,12 +85,30 @@
       }
     },
     setTarget() {
-      const dataTarget = this.elem.getAttribute('data-hey');
-
       // If a data attribute is set with a target
-      if (dataTarget) {
-        this.target = document.querySelector(dataTarget);
+      if (this.elem.hasAttribute('data-hey')) {
+        this.target = document.querySelector(this.elem.getAttribute('data-hey'));
+      } else if (this.elem.hasAttribute('href') && this.elem.getAttribute('href').indexOf('#') >= 0) {
+        // Otherwise try to use the ID in the link
+        this.target = document.querySelector(this.elem.getAttribute('href'));
       }
+    },
+    checkTarget() {
+      let hasTarget;
+
+      try {
+        // Is the target a valid node
+        if (!(this.target && this.target.nodeType)) {
+          hasTarget = false;
+          throw new Error('No modal target given.');
+        } else {
+          hasTarget = true;
+        }
+      } catch(e) {
+        console.log(e);
+      }
+
+      return hasTarget;
     },
     // Remove the original target
     removeTarget() {
@@ -118,6 +140,7 @@
     open() {
       this.comp.wrapper.classList.add(this.visibleClass);
       this.setPageScroll(false);
+      this.body.style.marginRight = this.measureScrollbar();
       this.comp.wrapper.dispatchEvent(this.events.open);
     },
     close() {
@@ -125,6 +148,7 @@
 
       const closeOver = () => {
         this.setPageScroll(true);
+        this.body.style.marginRight = 0;
         this.comp.wrapper.removeEventListener('transitionend', closeOver);
         this.comp.wrapper.dispatchEvent(this.events.close);
       };
@@ -137,6 +161,31 @@
       } else {
         this.body.classList.add(this.bodyOverflowClass);
       }
+    },
+    measureScrollbar() {
+      let width;
+
+      // Create box to measure scrollbar
+      const measure = document.createElement('div');
+
+      // Make sure it triggers overflow
+      measure.style.width = 100;
+      measure.style.height = 100;
+      measure.style.overflow = 'scroll';
+      measure.style.position = 'absolute';
+      measure.style.top = -9999;
+
+      // Add the measure element
+      this.body.appendChild(measure);
+
+      // Measure the difference between with/without the scrollbar
+      width = measure.offsetWidth - measure.clientWidth;
+
+      // Remove from DOM
+      this.body.removeChild(measure);
+
+      // Return our best guess at the width
+      return width;
     },
   };
 
@@ -156,24 +205,16 @@
 
 const myModal = heyModal(document.querySelector('.modal-trigger'));
 
-const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger'), {
-  content: {
-    title: 'Lesser title override',
-  },
-});
-
-// myModal.comp.wrapper.addEventListener('heyOpen', () => {
-//   console.log('open!');
-// });
-//
-// myModal.comp.wrapper.addEventListener('heyClose', () => {
-//   console.log('close!');
+// const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger'), {
+//   content: {
+//     title: 'Lesser title override',
+//   },
 // });
 
-myModal.on('heyOpen', () => {
-  console.log('opening!');
-});
+// myModal.on('heyOpen', () => {
+//   console.log('opening!');
+// });
 
-myModal.on('heyClose', () => {
-  console.log('closing!');
-});
+// myModal.on('heyClose', () => {
+//   console.log('closing!');
+// });
