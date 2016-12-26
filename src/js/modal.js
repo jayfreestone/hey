@@ -1,4 +1,6 @@
 (() => {
+  let id = 0;
+
   const heyModal = {
     body: null,
     elem: null,
@@ -17,6 +19,8 @@
       this.body = document.querySelector('body');
       this.setTarget();
 
+      this.id = id;
+
       // Only proceed if we have a valid target
       if (this.checkTarget()) {
         this.build();
@@ -34,10 +38,13 @@
       // Wrapper
       c.wrapper = document.createElement('div');
       c.wrapper.classList.add('modal');
+      c.wrapper.setAttribute('aria-hidden', 'true');
 
       // Dialog
       c.dialog = document.createElement('div');
       c.dialog.classList.add('modal__dialog');
+      c.dialog.setAttribute('role', 'dialog');
+      c.dialog.setAttribute('aria-labelledby', `modal__title-${this.id}`);
 
       // Header
       c.header = document.createElement('div');
@@ -46,6 +53,7 @@
       // Title
       c.title = document.createElement('h3');
       c.title.classList.add('modal__title');
+      c.title.id = `modal__title-${this.id}`;
 
       // Body
       c.body = document.createElement('div');
@@ -55,6 +63,8 @@
       // Close button
       c.closeBtn = document.createElement('button');
       c.closeBtn.classList.add('modal__close');
+      c.closeBtn.setAttribute('type', 'button');
+      c.closeBtn.setAttribute('aria-label', 'Close');
 
       // Build modal
       c.header.appendChild(c.title);
@@ -140,10 +150,32 @@
         e.stopPropagation();
       });
 
-      // Close with the escape key
-      window.addEventListener('keydown', e => {
-        if (e.keyCode == '27') {
-          this.close();
+      // Keybindings
+      this.comp.wrapper.addEventListener('keydown', e => {
+        switch (e.keyCode) {
+          // Escape
+          case 27:
+            this.close();
+            break;
+          // Tab
+          case 9:
+            // If we're tabbing backwards
+            if (e.shiftKey) {
+              // If (pre-event) we were focused on the first element...
+              if (this.firstFocusable == document.activeElement) {
+                e.preventDefault();
+                // ... send us backwards to the last in the dialog
+                this.lastFocusable.focus();
+              }
+              // If (pre-event) we were focused on the last element...
+            } else if (this.lastFocusable == document.activeElement) {
+              e.preventDefault();
+              // ... send us to the first in the dialog
+              this.firstFocusable.focus();
+            }
+            break;
+          default:
+            break;
         }
       });
     },
@@ -151,15 +183,33 @@
       this.comp.wrapper.classList.add(this.visibleClass);
       this.setPageScroll(false);
       this.body.style.marginRight = this.measureScrollbar();
+      this.comp.wrapper.setAttribute('aria-hidden', 'false');
+      this.setLastFocusedElem();
+      this.setFocus();
       this.comp.wrapper.dispatchEvent(this.events.open);
+    },
+    setFocus() {
+      // All elements in the dialog that can receive focus
+      const elemsWithFocus = this.comp.dialog.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]');
+
+      this.firstFocusable = elemsWithFocus[0];
+      this.lastFocusable = elemsWithFocus[elemsWithFocus.length - 1];
+
+      // Focus on first element, probably the close button
+      this.firstFocusable.focus();
+    },
+    setLastFocusedElem() {
+      this.lastFocused = document.activeElement;
     },
     close() {
       this.comp.wrapper.classList.remove(this.visibleClass);
+      this.lastFocused.focus();
 
       const closeOver = () => {
         this.setPageScroll(true);
         this.body.style.marginRight = 0;
         this.comp.wrapper.removeEventListener('transitionend', closeOver);
+        this.comp.wrapper.setAttribute('aria-hidden', 'true');
         this.comp.wrapper.dispatchEvent(this.events.close);
       };
 
@@ -200,6 +250,8 @@
   };
 
   window.heyModal = (elem, options) => {
+    id += 1;
+
     // Create a new modal object
     const newModal = Object.assign(Object.create(heyModal), {
       elem,
@@ -215,11 +267,15 @@
 
 const myModal = heyModal(document.querySelector('.modal-trigger'));
 
-// const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger'), {
-//   content: {
-//     title: 'Lesser title override',
-//   },
-// });
+console.log(myModal);
+
+const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger'), {
+  content: {
+    title: 'Lesser title override',
+  },
+});
+
+console.log(lesserModal);
 
 // myModal.on('heyOpen', () => {
 //   console.log('opening!');
