@@ -21,6 +21,7 @@
       if (this.checkTarget()) {
         this.build();
         this.removeTarget();
+        this.setMaxHeight();
         this.bindEvents();
       }
     },
@@ -44,10 +45,12 @@
 
       // Title
       c.title = document.createElement('h3');
+      c.title.classList.add('modal__title');
 
       // Body
       c.body = document.createElement('div');
       c.body.classList.add('modal__body');
+      c.body.style.overflow = 'auto';
 
       // Close button
       c.closeBtn = document.createElement('button');
@@ -113,6 +116,13 @@
     // Remove the original target
     removeTarget() {
       this.target.remove();
+    },
+    setMaxHeight() {
+      const wrapperStyles = getComputedStyle(this.comp.wrapper);
+      const headerHeight = this.comp.header.offsetHeight;
+      const maxHeight = `calc(100vh - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
+
+      this.comp.body.style.maxHeight = maxHeight;
     },
     bindEvents() {
       // Open on target click

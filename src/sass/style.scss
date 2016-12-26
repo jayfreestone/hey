@@ -1,38 +1,69 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .modal-body-no-scroll {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .modal {
-    visibility: hidden;
-    opacity: 0;
-    transition: all 0.3s;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    overflow: hidden;
-    padding: 2rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  overflow: hidden;
+  padding: 2rem;
 }
 
 .modal--is-visible {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 .modal__dialog {
-    background: white;
-    padding: 2rem;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 40rem;
-    flex: 0;
+  background: white;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 40rem;
+  flex: 0;
+  border-radius: 0.3rem;
+}
+
+.modal__header,
+.modal__body {
+  padding: 1.5rem 2rem;
+}
+
+.modal__header {
+  border-bottom: 1px solid whitesmoke;
+
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+.modal__title {
+  margin: 0;
+  float: left;
+}
+
+.modal__close {
+  float: right;
+}
+
+.modal__body {
 }
