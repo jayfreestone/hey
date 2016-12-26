@@ -4,7 +4,6 @@ var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var sass = require('gulp-sass');
 var autoPrefixer = require('gulp-autoprefixer');
-var cleanCss = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 
@@ -19,12 +18,10 @@ gulp.task('sass',function(){
     .pipe(sourcemaps.init())
     .pipe(sass())
     .pipe(autoPrefixer())
-    .pipe(gulp.dest('dist/css'))
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(cleanCss())
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist/css'))
 });
 gulp.task('js',function(){
