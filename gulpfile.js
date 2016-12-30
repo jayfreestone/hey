@@ -32,16 +32,16 @@ gulp.task('js',function(){
         this.emit('end');
       }
     }))
-    .pipe(sourcemaps.init())
-    .pipe(gulp.dest('dist/js'))
+    // .pipe(sourcemaps.init())
+    // .pipe(gulp.dest('dist/js'))
     .pipe(babel({
-      presets: ['es2015']
+      presets: [['es2015', { modules: 'umd' }]]
     }))
     .pipe(rename({
       suffix: '.min'
     }))
     .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
+    // .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist/js'))
 });
 gulp.task('default',function(){

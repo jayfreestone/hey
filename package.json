@@ -1,7 +1,7 @@
 {
   "name": "hey.js",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/js/heyModal.min.js",
   "repository": {
     "url": "git@github.com:jayfreestone/hey.git",
     "type": "git"
@@ -19,5 +19,12 @@
     "gulp-sass": "^3.0.0",
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0"
   }
 }

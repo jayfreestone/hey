@@ -1,4 +1,4 @@
-(() => {
+module.exports = (() => {
   let id = 0;
 
   const heyModal = {
@@ -15,7 +15,7 @@
     },
     visibleClass: 'modal--is-visible',
     bodyOverflowClass: 'modal-body-no-scroll',
-    init () {
+    init() {
       this.body = document.querySelector('body');
       this.setTarget();
 
@@ -29,10 +29,10 @@
         this.bindEvents();
       }
     },
-    on (event, action) {
+    on(event, action) {
       this.comp.wrapper.addEventListener(event, action);
     },
-    build () {
+    build() {
       const c = {};
 
       // Wrapper
@@ -117,7 +117,7 @@
         } else {
           hasTarget = true;
         }
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
 
@@ -162,13 +162,13 @@
             // If we're tabbing backwards
             if (e.shiftKey) {
               // If (pre-event) we were focused on the first element...
-              if (this.firstFocusable == document.activeElement) {
+              if (this.firstFocusable === document.activeElement) {
                 e.preventDefault();
                 // ... send us backwards to the last in the dialog
                 this.lastFocusable.focus();
               }
               // If (pre-event) we were focused on the last element...
-            } else if (this.lastFocusable == document.activeElement) {
+            } else if (this.lastFocusable === document.activeElement) {
               e.preventDefault();
               // ... send us to the first in the dialog
               this.firstFocusable.focus();
@@ -223,8 +223,6 @@
       }
     },
     measureScrollbar() {
-      let width;
-
       // Create box to measure scrollbar
       const measure = document.createElement('div');
 
@@ -239,7 +237,7 @@
       this.body.appendChild(measure);
 
       // Measure the difference between with/without the scrollbar
-      width = measure.offsetWidth - measure.clientWidth;
+      const width = measure.offsetWidth - measure.clientWidth;
 
       // Remove from DOM
       this.body.removeChild(measure);
@@ -249,7 +247,7 @@
     },
   };
 
-  window.heyModal = (elem, options) => {
+  return (elem, options) => {
     id += 1;
 
     // Create a new modal object
@@ -262,25 +260,6 @@
 
     // Return our new modal
     return newModal;
-  }
+  };
 })();
 
-const myModal = heyModal(document.querySelector('.modal-trigger'));
-
-console.log(myModal);
-
-const lesserModal = heyModal(document.querySelector('.less-great-modal-trigger'), {
-  content: {
-    title: 'Lesser title override',
-  },
-});
-
-console.log(lesserModal);
-
-// myModal.on('heyOpen', () => {
-//   console.log('opening!');
-// });
-
-// myModal.on('heyClose', () => {
-//   console.log('closing!');
-// });
