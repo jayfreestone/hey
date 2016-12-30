@@ -9,10 +9,6 @@ $yellow: #e5b344;
 }
 
 body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  justify-content: space-around;
   font-family: 'acumin-pro', sans-serif;
   line-height: 1.5;
   border-top: 0.4rem solid $yellow;
@@ -22,6 +18,10 @@ main {
   text-align: center;
   color: #808080;
   padding: 1rem;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 h1 {

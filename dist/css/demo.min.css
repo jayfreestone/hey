@@ -408,6 +408,14 @@ template {
   box-sizing: border-box; }
 
 body {
+  font-family: 'acumin-pro', sans-serif;
+  line-height: 1.5;
+  border-top: 0.4rem solid #e5b344; }
+
+main {
+  text-align: center;
+  color: #808080;
+  padding: 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -417,15 +425,7 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   -ms-flex-pack: distribute;
-      justify-content: space-around;
-  font-family: 'acumin-pro', sans-serif;
-  line-height: 1.5;
-  border-top: 0.4rem solid #e5b344; }
-
-main {
-  text-align: center;
-  color: #808080;
-  padding: 1rem; }
+      justify-content: space-around; }
 
 h1 {
   font-weight: 400;
