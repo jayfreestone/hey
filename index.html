@@ -1,30 +1,19 @@
+<!doctype html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <title>hey.js | A vanilla-JS modal</title>
+    <meta name="description" content="hey.js is a simple dependency-free modal written in JavaScript.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="dist/css/style.min.css">
+    <link rel="stylesheet" href="dist/css/demo.min.css">
 </head>
 <body>
-    <header>
-        <h1>hey.js</h1>
-        <nav>
-            <ul>
-                <li><a href="#why">Why</a></li>
-                <li><a href="#how">How</a></li>
-                <li><a href="#">Download on Github</a></li>
-            </ul>
-        </nav>
-    </header>
     <main>
-        <section>
-            <h2>hey.js is a fun and easy to use JavaScript modal.</h2>
-            <p>It can be included inline or generated dynamically. Accessible by default and dependency-free.</p>
-            <a href="#great-modal" class="modal-trigger">Show me the modal</a>
-        </section>
-        <section id="why">
-            <h2>Why</h2>
-        </section>
-        <section id="how">
-            <h2>How</h2>
-        </section>
+        <img class="icon" src="demo/img/apple-wave.png" alt="Waving hand emoji">
+        <h1><a href="https://github.com/jayfreestone/hey">hey.js</a> is a simple dependency-free modal written in JavaScript.</h1>
+        <p>It can be included inline or generated dynamically. Accessible by default and dependency-free.</p>
+        <a href="#great-modal" class="modal-trigger button">Show me the modal</a>
     </main>
 
     <div id="great-modal" style="display: none;">
@@ -52,5 +41,7 @@
 
     <script src="dist/js/heyModal.min.js"></script>
     <script src="dist/js/demo.min.js"></script>
+    <script src="https://use.typekit.net/cnt7bje.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
 </body>
 </html>
