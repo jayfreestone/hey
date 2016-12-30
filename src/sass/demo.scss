@@ -11,17 +11,21 @@ $yellow: #e5b344;
 body {
   font-family: 'acumin-pro', sans-serif;
   line-height: 1.5;
-  border-top: 0.4rem solid $yellow;
 }
 
 main {
   text-align: center;
   color: #808080;
-  padding: 1rem;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.site {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  justify-content: space-around;
+  border-top: 0.4rem solid $yellow;
+  padding: 1rem;
 }
 
 h1 {
@@ -58,4 +62,26 @@ p {
 .icon {
   width: 2rem;
   height: auto;
+}
+
+.links {
+  margin-top: 2rem;
+
+  a {
+    color: black;
+    border-bottom: 1px solid $yellow;
+    padding-bottom: 0.2rem;
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+    transform: translateY(-0.2rem);
+    margin-right: 0.4rem;
+  }
+}
+
+footer {
+  text-align: center;
+  font-size: 0.9rem;
 }

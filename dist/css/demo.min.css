@@ -409,13 +409,15 @@ template {
 
 body {
   font-family: 'acumin-pro', sans-serif;
-  line-height: 1.5;
-  border-top: 0.4rem solid #e5b344; }
+  line-height: 1.5; }
 
 main {
   text-align: center;
   color: #808080;
-  padding: 1rem;
+  margin-top: auto;
+  margin-bottom: auto; }
+
+.site {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -424,8 +426,8 @@ main {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -ms-flex-pack: distribute;
-      justify-content: space-around; }
+  border-top: 0.4rem solid #e5b344;
+  padding: 1rem; }
 
 h1 {
   font-weight: 400;
@@ -454,5 +456,22 @@ p {
 .icon {
   width: 2rem;
   height: auto; }
+
+.links {
+  margin-top: 2rem; }
+  .links a {
+    color: black;
+    border-bottom: 1px solid #e5b344;
+    padding-bottom: 0.2rem; }
+  .links svg {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: translateY(-0.2rem);
+            transform: translateY(-0.2rem);
+    margin-right: 0.4rem; }
+
+footer {
+  text-align: center;
+  font-size: 0.9rem; }
 
 /*# sourceMappingURL=demo.min.css.map */
