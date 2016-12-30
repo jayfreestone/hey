@@ -130,11 +130,29 @@ module.exports = (() => {
     setMaxHeight() {
       const wrapperStyles = getComputedStyle(this.comp.wrapper);
       const headerHeight = this.comp.header.offsetHeight;
-      const maxHeight = `calc(100vh - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
+
+      // We can't use 100vh since mobile device support causes issues
+      const wrapperHeight = this.comp.wrapper.offsetHeight;
+
+      const maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
 
       this.comp.body.style.maxHeight = maxHeight;
     },
     bindEvents() {
+      // Scrolling on the modal on mobile shouldn't scroll the bg
+      this.comp.wrapper.addEventListener('touchmove', e => {
+        e.preventDefault();
+      }, false);
+
+      // Allow mobile scrolling on the body
+      this.comp.body.addEventListener('touchmove', e => {
+        e.stopPropagation();
+      }, false);
+
+      window.addEventListener('resize', () => {
+        this.setMaxHeight();
+      });
+
       // Open on target click
       this.elem.addEventListener('click', e => {
         e.preventDefault();

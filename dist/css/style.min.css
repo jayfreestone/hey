@@ -33,10 +33,8 @@
   margin: 0 auto;
   width: 100%;
   max-width: 40rem;
-  -webkit-box-flex: 0;
-      -ms-flex: 0;
-          flex: 0;
-  border-radius: 0.3rem; }
+  border-radius: 0.3rem;
+  overflow: hidden; }
 
 .modal__header,
 .modal__body {
