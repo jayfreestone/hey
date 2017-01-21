@@ -41,7 +41,13 @@
   padding: 1.5rem 2rem; }
 
 .modal__header {
-  border-bottom: 1px solid whitesmoke; }
+  border-bottom: 1px solid whitesmoke;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
   .modal__header:before, .modal__header:after {
     content: " ";
     display: table; }
@@ -53,6 +59,18 @@
   float: left; }
 
 .modal__close {
-  float: right; }
+  float: right;
+  cursor: pointer;
+  margin-left: auto;
+  width: 0.9rem;
+  height: 0.9rem;
+  background-image: url("../img/cross.svg");
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none; }
 
 /*# sourceMappingURL=style.min.css.map */

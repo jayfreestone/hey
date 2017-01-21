@@ -7,6 +7,16 @@ var autoPrefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 
+gulp.task('svg',function(){
+  gulp.src(['src/img/**/*.svg'])
+    .pipe(plumber({
+      handleError: function (err) {
+        console.log(err);
+        this.emit('end');
+      }
+    }))
+    .pipe(gulp.dest('dist/img'))
+});
 gulp.task('sass',function(){
   gulp.src(['src/sass/**/*.scss'])
     .pipe(plumber({
@@ -47,4 +57,5 @@ gulp.task('js',function(){
 gulp.task('default',function(){
   gulp.watch('src/js/**/*.js',['js']);
   gulp.watch('src/sass/**/*.scss',['sass']);
+  gulp.watch('src/img/**/*.svg',['svg']);
 });
