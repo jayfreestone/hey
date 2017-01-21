@@ -168,11 +168,15 @@ module.exports = (() => {
         e.stopPropagation();
       });
 
-      // Allow a user to assign a close button inside the body with [data-hey-close]
-      this.comp.dialog.querySelector('[data-hey-close]').addEventListener('click', (e) => {
-          e.preventDefault();
-          this.close();
-      });
+      const userCloseBtn = this.comp.dialog.querySelector('[data-hey-close]');
+
+      if (userCloseBtn) {
+        // Allow a user to assign a close button inside the body with [data-hey-close]
+        userCloseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.close();
+        });
+      }
 
       // Keybindings
       this.comp.wrapper.addEventListener('keydown', e => {
