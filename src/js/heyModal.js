@@ -1,13 +1,18 @@
-module.exports = (() => {
+import 'custom-event-polyfill';
+import 'core-js/modules/_object-assign';
+
+const heyModal = (() => {
   let id = 0;
 
-  const heyModal = {
+  const heyModalProto = {
     body: null,
     elem: null,
     target: null,
     events: {
-      open: new Event('heyOpen'),
-      close: new Event('heyClose'),
+      open: null,
+      close: null,
+      // open: new CustomEvent('heyOpen'),
+      // close: new CustomEvent('heyClose'),
     },
     content: {
       title: null,
@@ -282,7 +287,7 @@ module.exports = (() => {
     id += 1;
 
     // Create a new modal object
-    const newModal = Object.assign(Object.create(heyModal), {
+    const newModal = Object.assign(Object.create(heyModalProto), {
       elem,
     }, options);
 
@@ -294,3 +299,4 @@ module.exports = (() => {
   };
 })();
 
+export default heyModal;
