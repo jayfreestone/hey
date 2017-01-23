@@ -1,1 +1,0 @@
-import heyModal from './heyModal';

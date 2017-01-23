@@ -9,7 +9,9 @@
   "author": "Jay Freestone <mail@jayfreestone.com>",
   "license": "MIT",
   "scripts": {
-      "start": "node server.js"
+    "start": "node server.js",
+    "build:css": "node-sass src/sass/style.scss dist/css/style.min.css",
+    "build:js": "webpack -p --config webpack.config.prod.js" 
   },
   "dependencies": {
     "babel-core": "^6.22.1",

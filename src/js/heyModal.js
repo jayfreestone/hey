@@ -1,7 +1,9 @@
-import 'custom-event-polyfill';
-import 'core-js/modules/_object-assign';
+// Avoid ES6 imports until this is solved:
+// https://github.com/webpack/webpack/issues/3929
+require('custom-event-polyfill');
+require('core-js/modules/_object-assign');
 
-const heyModal = (() => {
+module.exports = (() => {
   let id = 0;
 
   const heyModalProto = {
@@ -9,10 +11,8 @@ const heyModal = (() => {
     elem: null,
     target: null,
     events: {
-      open: null,
-      close: null,
-      // open: new CustomEvent('heyOpen'),
-      // close: new CustomEvent('heyClose'),
+      open: new CustomEvent('heyOpen'),
+      close: new CustomEvent('heyClose'),
     },
     content: {
       title: null,
@@ -298,5 +298,3 @@ const heyModal = (() => {
     return newModal;
   };
 })();
-
-export default heyModal;
