@@ -222,8 +222,16 @@ module.exports = (() => {
       this.body.style.marginRight = this.measureScrollbar();
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
       this.setLastFocusedElem();
-      this.setFocus();
       this.comp.wrapper.dispatchEvent(this.events.open);
+
+      // Visibility: hidden will stop us setting focus,
+      // so we have to do it after the transition
+      function transitionEnd() {
+          this.setFocus();
+          this.comp.wrapper.removeEventListener('transitionEnd', transitionEnd);
+      }
+
+      this.comp.wrapper.addEventListener('transitionend', transitionEnd.bind(this));
     },
     setFocus() {
       // All elements in the dialog that can receive focus
