@@ -43,7 +43,6 @@ module.exports = (() => {
 
       // Wrapper
       c.wrapper = document.createElement('div');
-      console.log(c.wrapper);
       c.wrapper.classList.add('modal');
       c.wrapper.setAttribute('aria-hidden', 'true');
 
