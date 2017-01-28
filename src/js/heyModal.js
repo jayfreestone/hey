@@ -1,7 +1,8 @@
 // Avoid ES6 imports until this is solved:
 // https://github.com/webpack/webpack/issues/3929
 require('custom-event-polyfill');
-require('core-js/modules/_object-assign');
+require('core-js/fn/object/assign');
+require('classlist.js');
 
 module.exports = (() => {
   let id = 0;
@@ -42,6 +43,7 @@ module.exports = (() => {
 
       // Wrapper
       c.wrapper = document.createElement('div');
+      console.log(c.wrapper);
       c.wrapper.classList.add('modal');
       c.wrapper.setAttribute('aria-hidden', 'true');
 
@@ -133,7 +135,7 @@ module.exports = (() => {
     },
     // Remove the original target
     removeTarget() {
-      this.target.remove();
+      this.target.parentElement.removeChild(this.target);
     },
     setMaxHeight() {
       const wrapperStyles = getComputedStyle(this.comp.wrapper);

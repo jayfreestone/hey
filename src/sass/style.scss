@@ -3,8 +3,8 @@
 }
 
 .modal {
-  pointer-events: none;
   opacity: 0;
+  visibility: hidden;
   transition: opacity 0.3s;
   position: fixed;
   top: 0;
@@ -20,8 +20,8 @@
 }
 
 .modal--is-visible {
-  pointer-events: initial;
   opacity: 1;
+  visibility: visible;
 }
 
 .modal__dialog {
