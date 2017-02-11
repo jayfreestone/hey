@@ -53,7 +53,12 @@
     <script src="dist/js/heyModal.min.js"></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			var myModal = heyModal(document.querySelector('.modal-trigger'));
+			var myModal = heyModal(document.querySelector('.modal-trigger'), {
+			  content: {
+			    title: 'hmm',
+                body: 'test'
+              }
+            });
 		});
 	</script>
     <script src="https://use.typekit.net/cnt7bje.js"></script>

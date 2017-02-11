@@ -89,10 +89,12 @@ module.exports = (() => {
     },
     populate() {
       const self = this;
-	  const content = {};
+      const content = {};
 
       // TODO could probably be re-written to accommodate mix of JS/non-js content, or just made simpler
       for (const el in this.content) {
+        content[el] = this.content[el];
+
         if (!this.content[el]) {
           const domElem = self.target.querySelector(`[data-hey-${el}]`);
 
@@ -104,7 +106,7 @@ module.exports = (() => {
         this.comp[el].innerHTML = content[el];
       }
 
-	  this.content = content;
+      this.content = content;
     },
     setTarget() {
       // If a data attribute is set with a target
