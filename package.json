@@ -20,6 +20,7 @@
     "classlist.js": "^1.1.20150312",
     "core-js": "zloirock/core-js",
     "custom-event-polyfill": "^0.3.0",
+    "lodash": "^4.17.4",
     "node-sass": "^4.4.0",
     "normalize.css": "^5.0.0",
     "webpack": "beta",

@@ -3,14 +3,33 @@
 require('custom-event-polyfill');
 require('core-js/fn/object/assign');
 require('classlist.js');
+const merge = require('lodash/merge');
 
 module.exports = (() => {
   let id = 0;
 
+  const defaultOptions = {
+    classes: {
+      modal: ['modal'],
+      modalDialog: ['modal__dialog'],
+      modalHeader: ['modal__header'],
+      modalBody: ['modal__body'],
+      modalClose: ['modal__close'],
+      modalTitle: ['modal__title'],
+      confirm: ['modal__confirm'],
+      confirmYes: ['btn', 'btn--positive'],
+      confirmCancel: ['btn', 'btn--negative'],
+      visibleClass: ['modal--is-visible'],
+      bodyOverflowClass: ['modal-body-no-scroll'],
+    },
+  };
+
   const heyModalProto = {
+    options: defaultOptions,
     body: null,
     elem: null,
     target: null,
+    confirm: false,
     events: {
       open: new CustomEvent('heyOpen'),
       close: new CustomEvent('heyClose'),
@@ -19,27 +38,48 @@ module.exports = (() => {
       title: null,
       body: null,
     },
-    visibleClass: 'modal--is-visible',
-    bodyOverflowClass: 'modal-body-no-scroll',
     init() {
       this.body = document.querySelector('body');
-      this.setTarget();
-
       this.id = id;
 
-      // Only proceed if we have a valid target
-      if (this.checkTarget()) {
-        this.build();
-        this.removeTarget();
-        this.setMaxHeight();
-        this.bindEvents();
+      // Check if the classes passed in are valid
+      this.checkClasses();
+
+      // If it's a confirm we flip a switch
+      if (this.elem.hasAttribute('data-hey-confirm')) {
+        this.confirm = true;
       }
+
+      // Don't check/set the target on confirms, since they don't have one
+      if (!this.confirm) {
+        this.setTarget();
+        this.checkTarget();
+      }
+
+      this.build();
+      this.removeTarget();
+      this.setMaxHeight();
+      this.bindEvents();
     },
     on(event, action) {
       this.comp.wrapper.addEventListener(event, action);
     },
+    checkClasses() {
+      try {
+        // Check if all classes are supplied as arrays
+        const allArrays = Object.keys(this.options.classes)
+          .every(c => this.options.classes[c] instanceof Array);
+
+        if (!allArrays) {
+          throw new Error('Classes must be set as arrays, e.g. confirm: [\'class-one\']');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
     build() {
       const c = {};
+      const classes = this.options.classes;
 
       // Wrapper
       c.wrapper = document.createElement('div');
@@ -48,35 +88,60 @@ module.exports = (() => {
 
       // Dialog
       c.dialog = document.createElement('div');
-      c.dialog.classList.add('modal__dialog');
+      c.dialog.classList.add(...classes.modalDialog);
       c.dialog.setAttribute('role', 'dialog');
       c.dialog.setAttribute('aria-labelledby', `modal__title-${this.id}`);
 
       // Header
       c.header = document.createElement('div');
-      c.header.classList.add('modal__header');
+      c.header.classList.add(...classes.modalHeader);
 
       // Title
       c.title = document.createElement('h3');
-      c.title.classList.add('modal__title');
+      c.title.classList.add(...classes.modalTitle);
       c.title.id = `modal__title-${this.id}`;
+
+      // Inner
+      c.inner = document.createElement('div');
+      c.inner.classList.add(...classes.modalBody);
+      c.inner.style.overflow = 'auto';
 
       // Body
       c.body = document.createElement('div');
-      c.body.classList.add('modal__body');
-      c.body.style.overflow = 'auto';
+      c.inner.appendChild(c.body);
 
       // Close button
       c.closeBtn = document.createElement('button');
-      c.closeBtn.classList.add('modal__close');
+      c.closeBtn.classList.add(...classes.modalClose);
       c.closeBtn.setAttribute('type', 'button');
       c.closeBtn.setAttribute('aria-label', 'Close');
+
+      // Add confirm buttons
+      if (this.confirm) {
+        c.confirm = document.createElement('div');
+        c.confirm.classList.add(...classes.confirm);
+
+        c.confirmYes = document.createElement('a');
+        c.confirmYes.innerHTML = 'Proceed';
+        c.confirmYes.setAttribute('href', this.elem.getAttribute('href'));
+        c.confirmYes.classList.add(...classes.confirmYes);
+
+        c.confirmCancel = document.createElement('button');
+        c.confirmCancel.innerHTML = 'Cancel';
+        c.confirmCancel.setAttribute('data-hey-close', true);
+        c.confirmCancel.classList.add(...classes.confirmCancel);
+
+        c.confirm.appendChild(c.confirmYes);
+        c.confirm.appendChild(c.confirmCancel);
+
+        c.inner.appendChild(c.confirm);
+      }
 
       // Build modal
       c.header.appendChild(c.title);
       c.header.appendChild(c.closeBtn);
       c.dialog.appendChild(c.header);
-      c.dialog.appendChild(c.body);
+      c.dialog.appendChild(c.inner);
       c.wrapper.appendChild(c.dialog);
 
       this.comp = c;
@@ -91,15 +156,24 @@ module.exports = (() => {
       const self = this;
       const content = {};
 
-      // TODO could probably be re-written to accommodate mix of JS/non-js content, or just made simpler
       for (const el in this.content) {
         content[el] = this.content[el];
 
+        // If the property is not already defined
         if (!this.content[el]) {
-          const domElem = self.target.querySelector(`[data-hey-${el}]`);
+          // First check if we have a target
+          if (self.target) {
+            // If so, look for elements with data attributes that match inside it
+            const domElem = self.target.querySelector(`[data-hey-${el}]`);
 
-          if (domElem) {
-            content[el] = domElem.innerHTML;
+            // If found, assign them
+            if (domElem) {
+              content[el] = domElem.innerHTML;
+            }
+          // Otherwise, look for data attributes on the target
+          } else if (self.elem.hasAttribute(`data-hey-${el}`)) {
+            // If found, assign them
+            content[el] = self.elem.getAttribute(`data-hey-${el}`);
           }
         }
 
@@ -129,14 +203,16 @@ module.exports = (() => {
           hasTarget = true;
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
 
       return hasTarget;
     },
     // Remove the original target
     removeTarget() {
-      this.target.parentElement.removeChild(this.target);
+      if (this.target) {
+        this.target.parentElement.removeChild(this.target);
+      }
     },
     setMaxHeight() {
       const wrapperStyles = getComputedStyle(this.comp.wrapper);
@@ -147,7 +223,7 @@ module.exports = (() => {
 
       const maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
 
-      this.comp.body.style.maxHeight = maxHeight;
+      this.comp.inner.style.maxHeight = maxHeight;
     },
     bindEvents() {
       // Scrolling on the modal on mobile shouldn't scroll the bg
@@ -184,8 +260,8 @@ module.exports = (() => {
       if (userCloseBtn) {
         // Allow a user to assign a close button inside the body with [data-hey-close]
         userCloseBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.close();
+          e.preventDefault();
+          this.close();
         });
       }
 
@@ -219,7 +295,7 @@ module.exports = (() => {
       });
     },
     open() {
-      this.comp.wrapper.classList.add(this.visibleClass);
+      this.comp.wrapper.classList.add(this.options.classes.visibleClass);
       this.setPageScroll(false);
       this.body.style.marginRight = this.measureScrollbar();
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
@@ -229,8 +305,8 @@ module.exports = (() => {
       // Visibility: hidden will stop us setting focus,
       // so we have to do it after the transition
       function transitionEnd() {
-          this.setFocus();
-          this.comp.wrapper.removeEventListener('transitionEnd', transitionEnd);
+        this.setFocus();
+        this.comp.wrapper.removeEventListener('transitionEnd', transitionEnd);
       }
 
       this.comp.wrapper.addEventListener('transitionend', transitionEnd.bind(this));
@@ -249,7 +325,7 @@ module.exports = (() => {
       this.lastFocused = document.activeElement;
     },
     close() {
-      this.comp.wrapper.classList.remove(this.visibleClass);
+      this.comp.wrapper.classList.remove(this.options.classes.visibleClass);
       this.lastFocused.focus();
 
       const closeOver = () => {
@@ -264,9 +340,9 @@ module.exports = (() => {
     },
     setPageScroll(scrollable = false) {
       if (scrollable) {
-        this.body.classList.remove(this.bodyOverflowClass);
+        this.body.classList.remove(this.options.classes.bodyOverflowClass);
       } else {
-        this.body.classList.add(this.bodyOverflowClass);
+        this.body.classList.add(this.options.classes.bodyOverflowClass);
       }
     },
     measureScrollbar() {
@@ -294,13 +370,17 @@ module.exports = (() => {
     },
   };
 
-  return (elem, options) => {
+  return (elem, customOptions) => {
     id += 1;
+
+    // Use Lodash here, since we need to do a deep merge.
+    // Allows for a single class to be passed in, without removing all the other classes.
+    const options = merge({}, defaultOptions, customOptions);
 
     // Create a new modal object
     const newModal = Object.assign(Object.create(heyModalProto), {
       elem,
-    }, options);
+    }, { options });
 
     // Run initialisation
     newModal.init();
