@@ -14,6 +14,7 @@ module.exports = (() => {
       modalDialog: ['modal__dialog'],
       modalHeader: ['modal__header'],
       modalBody: ['modal__body'],
+      modalContent: ['modal__content'],
       modalClose: ['modal__close'],
       modalTitle: ['modal__title'],
       confirm: ['modal__confirm'],
@@ -108,6 +109,7 @@ module.exports = (() => {
 
       // Body
       c.body = document.createElement('div');
+      c.body.classList.add(...classes.modalContent);
       c.inner.appendChild(c.body);
 
       // Close button
