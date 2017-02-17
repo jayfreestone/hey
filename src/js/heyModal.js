@@ -140,7 +140,7 @@ module.exports = (() => {
 
         c.confirmCancel = document.createElement('button');
         c.confirmCancel.innerHTML = 'Cancel';
-        c.confirmCancel.setAttribute('data-hey-close', true);
+        c.confirmCancel.setAttribute('data-hey-close', '');
         c.confirmCancel.classList.add(...classes.confirmCancel);
 
         c.confirm.appendChild(c.confirmYes);
@@ -233,9 +233,7 @@ module.exports = (() => {
       // We can't use 100vh since mobile device support causes issues
       const wrapperHeight = this.comp.wrapper.offsetHeight;
 
-      const maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
-
-      this.comp.inner.style.maxHeight = maxHeight;
+      this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
     },
     bindEvents() {
       // Scrolling on the modal on mobile shouldn't scroll the bg
@@ -307,7 +305,7 @@ module.exports = (() => {
       });
     },
     open() {
-      this.comp.wrapper.classList.add(this.options.classes.visibleClass);
+      this.comp.wrapper.classList.add(...this.options.classes.visibleClass);
       this.setPageScroll(false);
       this.body.style.marginRight = this.measureScrollbar();
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
@@ -340,7 +338,7 @@ module.exports = (() => {
       this.lastFocused = document.activeElement;
     },
     close() {
-      this.comp.wrapper.classList.remove(this.options.classes.visibleClass);
+      this.comp.wrapper.classList.remove(...this.options.classes.visibleClass);
       this.lastFocused.focus();
 
       const closeOver = () => {
@@ -360,9 +358,9 @@ module.exports = (() => {
     },
     setPageScroll(scrollable = false) {
       if (scrollable) {
-        this.body.classList.remove(this.options.classes.bodyOverflowClass);
+        this.body.classList.remove(...this.options.classes.bodyOverflowClass);
       } else {
-        this.body.classList.add(this.options.classes.bodyOverflowClass);
+        this.body.classList.add(...this.options.classes.bodyOverflowClass);
       }
     },
     measureScrollbar() {
