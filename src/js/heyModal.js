@@ -248,6 +248,9 @@ module.exports = (() => {
       // Check if we need to accommodate scrollbars, which changes depending on viewport
       window.addEventListener('resize', debounce(this.setScrollable.bind(this), 500));
 
+      // Update the max height
+      window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
+
       // Scrolling on the modal on mobile shouldn't scroll the bg
       this.comp.wrapper.addEventListener('touchmove', e => {
         e.preventDefault();
@@ -257,10 +260,6 @@ module.exports = (() => {
       this.comp.body.addEventListener('touchmove', e => {
         e.stopPropagation();
       }, false);
-
-      window.addEventListener('resize', () => {
-        this.setMaxHeight();
-      });
 
       // Open on target click
       this.elem.addEventListener('click', e => {
@@ -317,7 +316,6 @@ module.exports = (() => {
       });
     },
     setScrollable() {
-      console.log('checking');
       this.shared.isScrollable = document.body.offsetHeight > window.innerHeight;
     },
     open() {
@@ -418,8 +416,6 @@ module.exports = (() => {
 
     // Run initialisation
     newModal.init();
-
-    console.log(newModal);
 
     // Return our new modal
     return newModal;
