@@ -307,7 +307,7 @@ module.exports = (() => {
     open() {
       this.comp.wrapper.classList.add(...this.options.classes.visibleClass);
       this.setPageScroll(false);
-      this.body.style.marginRight = this.measureScrollbar();
+      this.body.style.marginRight = `${this.measureScrollbar()}px`;
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
       this.setLastFocusedElem();
       this.comp.wrapper.dispatchEvent(this.events.open);
