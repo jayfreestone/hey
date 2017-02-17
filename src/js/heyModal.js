@@ -40,9 +40,15 @@ module.exports = (() => {
       title: null,
       body: null,
     },
+    testResults: {
+      transitions: null,
+    },
     init() {
       this.body = document.querySelector('body');
       this.id = id;
+
+      // Run browser tests
+      this.tests();
 
       // Check if the classes passed in are valid
       this.checkClasses();
@@ -62,6 +68,9 @@ module.exports = (() => {
       this.removeTarget();
       this.setMaxHeight();
       this.bindEvents();
+    },
+    tests() {
+      this.testResults.transitions = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style);
     },
     on(event, action) {
       this.comp.wrapper.addEventListener(event, action);
@@ -312,7 +321,10 @@ module.exports = (() => {
         this.comp.wrapper.removeEventListener('transitionEnd', transitionEnd);
       }
 
-      this.comp.wrapper.addEventListener('transitionend', transitionEnd.bind(this));
+      // We need to check, otherwise this will never fire in IE9
+      if (this.testResults.transitions) {
+        this.comp.wrapper.addEventListener('transitionend', transitionEnd.bind(this));
+      }
     },
     setFocus() {
       // All elements in the dialog that can receive focus
@@ -339,7 +351,12 @@ module.exports = (() => {
         this.comp.wrapper.dispatchEvent(this.events.close);
       };
 
-      this.comp.wrapper.addEventListener('transitionend', closeOver);
+      // We need to check, otherwise this will never fire in IE9
+      if (this.testResults.transitions) {
+        this.comp.wrapper.addEventListener('transitionend', closeOver);
+      } else {
+        closeOver();
+      }
     },
     setPageScroll(scrollable = false) {
       if (scrollable) {
