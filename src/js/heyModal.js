@@ -304,13 +304,16 @@ module.exports = (() => {
         }
       });
     },
+    isScrollable() {
+      return document.body.offsetHeight > window.innerHeight;
+    },
     open() {
       this.comp.wrapper.classList.add(...this.options.classes.visibleClass);
       this.setPageScroll(false);
-      this.body.style.marginRight = `${this.measureScrollbar()}px`;
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
       this.setLastFocusedElem();
       this.comp.wrapper.dispatchEvent(this.events.open);
+      this.body.style.marginRight = this.isScrollable() ? `${this.measureScrollbar()}px` : '';
 
       // Visibility: hidden will stop us setting focus,
       // so we have to do it after the transition
@@ -402,6 +405,8 @@ module.exports = (() => {
 
     // Run initialisation
     newModal.init();
+
+    console.log(newModal);
 
     // Return our new modal
     return newModal;
