@@ -2,6 +2,7 @@
 // https://github.com/webpack/webpack/issues/3929
 require('custom-event-polyfill');
 require('core-js/fn/object/assign');
+require('core-js/fn/object/keys');
 require('classlist.js');
 const merge = require('lodash/merge');
 
