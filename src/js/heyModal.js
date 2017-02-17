@@ -5,6 +5,7 @@ require('core-js/fn/object/assign');
 require('core-js/fn/object/keys');
 require('classlist.js');
 const merge = require('lodash/merge');
+const debounce = require('lodash/debounce');
 
 module.exports = (() => {
   let id = 0;
@@ -43,12 +44,20 @@ module.exports = (() => {
     testResults: {
       transitions: null,
     },
+    shared: {
+      isScrollable: null,
+      scrollbarWidth: null,
+    },
     init() {
       this.body = document.querySelector('body');
       this.id = id;
 
       // Run browser tests
       this.tests();
+
+      // Update shared properties
+      this.setScrollable();
+      this.setScrollbarWidth();
 
       // Check if the classes passed in are valid
       this.checkClasses();
@@ -236,6 +245,9 @@ module.exports = (() => {
       this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
     },
     bindEvents() {
+      // Check if we need to accommodate scrollbars, which changes depending on viewport
+      window.addEventListener('resize', debounce(this.setScrollable.bind(this), 500));
+
       // Scrolling on the modal on mobile shouldn't scroll the bg
       this.comp.wrapper.addEventListener('touchmove', e => {
         e.preventDefault();
@@ -304,8 +316,9 @@ module.exports = (() => {
         }
       });
     },
-    isScrollable() {
-      return document.body.offsetHeight > window.innerHeight;
+    setScrollable() {
+      console.log('checking');
+      this.shared.isScrollable = document.body.offsetHeight > window.innerHeight;
     },
     open() {
       this.comp.wrapper.classList.add(...this.options.classes.visibleClass);
@@ -313,7 +326,7 @@ module.exports = (() => {
       this.comp.wrapper.setAttribute('aria-hidden', 'false');
       this.setLastFocusedElem();
       this.comp.wrapper.dispatchEvent(this.events.open);
-      this.body.style.marginRight = this.isScrollable() ? `${this.measureScrollbar()}px` : '';
+      this.body.style.marginRight = this.shared.isScrollable ? `${this.shared.scrollbarWidth}px` : '';
 
       // Visibility: hidden will stop us setting focus,
       // so we have to do it after the transition
@@ -366,7 +379,7 @@ module.exports = (() => {
         this.body.classList.add(...this.options.classes.bodyOverflowClass);
       }
     },
-    measureScrollbar() {
+    setScrollbarWidth() {
       // Create box to measure scrollbar
       const measure = document.createElement('div');
 
@@ -386,8 +399,8 @@ module.exports = (() => {
       // Remove from DOM
       this.body.removeChild(measure);
 
-      // Return our best guess at the width
-      return width;
+      // Update our best guess at the width
+      this.shared.scrollbarWidth = width;
     },
   };
 
