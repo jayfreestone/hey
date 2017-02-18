@@ -252,17 +252,17 @@ module.exports = (() => {
       window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
 
       // Scrolling on the modal on mobile shouldn't scroll the bg
-      this.comp.wrapper.addEventListener('touchmove', e => {
+      this.comp.wrapper.addEventListener('touchmove', (e) => {
         e.preventDefault();
       }, false);
 
       // Allow mobile scrolling on the body
-      this.comp.body.addEventListener('touchmove', e => {
+      this.comp.body.addEventListener('touchmove', (e) => {
         e.stopPropagation();
       }, false);
 
       // Open on target click
-      this.elem.addEventListener('click', e => {
+      this.elem.addEventListener('click', (e) => {
         e.preventDefault();
         this.open();
       });
@@ -287,7 +287,7 @@ module.exports = (() => {
       }
 
       // Keybindings
-      this.comp.wrapper.addEventListener('keydown', e => {
+      this.comp.wrapper.addEventListener('keydown', (e) => {
         switch (e.keyCode) {
           // Escape
           case 27:
