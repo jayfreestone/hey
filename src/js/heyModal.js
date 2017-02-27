@@ -75,7 +75,7 @@ module.exports = (() => {
 
       this.build();
       this.removeTarget();
-      this.setMaxHeight();
+      // this.setMaxHeight();
       this.bindEvents();
     },
     tests() {
@@ -235,21 +235,21 @@ module.exports = (() => {
         this.target.parentElement.removeChild(this.target);
       }
     },
-    setMaxHeight() {
-      const wrapperStyles = getComputedStyle(this.comp.wrapper);
-      const headerHeight = this.comp.header.offsetHeight;
-
-      // We can't use 100vh since mobile device support causes issues
-      const wrapperHeight = this.comp.wrapper.offsetHeight;
-
-      this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
-    },
+    // setMaxHeight() {
+    //   const wrapperStyles = getComputedStyle(this.comp.wrapper);
+    //   const headerHeight = this.comp.header.offsetHeight;
+    //
+    //   // We can't use 100vh since mobile device support causes issues
+    //   const wrapperHeight = this.comp.wrapper.offsetHeight;
+    //
+    //   this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
+    // },
     bindEvents() {
       // Check if we need to accommodate scrollbars, which changes depending on viewport
       window.addEventListener('resize', debounce(this.setScrollable.bind(this), 500));
 
       // Update the max height
-      window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
+      // window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
 
       // Scrolling on the modal on mobile shouldn't scroll the bg
       this.comp.wrapper.addEventListener('touchmove', (e) => {
