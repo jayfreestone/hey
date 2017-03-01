@@ -3,11 +3,18 @@
 hey.js is a simple dependency-free modal written in JavaScript.
 
 ## Why should I use hey.js
+
 - Accessible (TODO).
 - Lightweight.
 - Flexible - works with inline content, dynamic content or AJAX'd content (TODO).
 - No jQuery dependency.
 - Great default styles that gracefully take care of scrollbar shifting and overflow issues.
+
+### Go on...
+
+There are loads of great modals out there, such as [Modaal](http://www.humaan.com/modaal/).
+
+However most don't address the little UI annoyances that plague modals, such as the 'scrollbar shift' when applying `overflow: hidden` to body.
 
 ## How to use
 
