@@ -28,9 +28,9 @@
   max-height: 100%;
   max-width: 40rem;
   border-radius: 0.3rem;
-  overflow: hidden;
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  overflow: hidden; }
 
 .modal__header,
 .modal__body {

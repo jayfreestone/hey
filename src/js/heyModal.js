@@ -2,8 +2,7 @@
 // https://github.com/webpack/webpack/issues/3929
 require('custom-event-polyfill');
 require('core-js/fn/object/assign');
-require('core-js/fn/object/keys');
-require('classlist.js');
+// require('classlist.js');
 const merge = require('lodash/merge');
 const debounce = require('lodash/debounce');
 
@@ -41,12 +40,10 @@ module.exports = (() => {
       title: null,
       body: null,
     },
-    testResults: {
-      transitions: null,
-    },
     shared: {
       isScrollable: null,
       scrollbarWidth: null,
+      testResults: null,
     },
     init() {
       this.body = document.querySelector('body');
@@ -75,11 +72,27 @@ module.exports = (() => {
 
       this.build();
       this.removeTarget();
-      // this.setMaxHeight();
+
+      // if we can't make the body 100% of the remaining height,
+      // we need to manually set a max-height to force a scrollable overflow.
+      if (!this.shared.testResults.flexbox) {
+        this.setMaxHeight();
+      }
+
       this.bindEvents();
     },
     tests() {
-      this.testResults.transitions = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style);
+      // Run the tests is we haven't already
+      if (!this.shared.testResults) {
+        const results = {};
+
+        // Transitions
+        results.transitions = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style);
+        // Flexbox
+        results.flexbox = ('flex-wrap' in document.documentElement.style);
+
+        this.shared.testResults = results;
+      }
     },
     on(event, action) {
       this.comp.wrapper.addEventListener(event, action);
@@ -203,6 +216,15 @@ module.exports = (() => {
 
       this.content = content;
     },
+    setMaxHeight() {
+      const wrapperStyles = getComputedStyle(this.comp.wrapper);
+      const headerHeight = this.comp.header.offsetHeight;
+
+      // We can't use 100vh since mobile device support causes issues
+      const wrapperHeight = this.comp.wrapper.offsetHeight;
+
+      this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
+    },
     setTarget() {
       // If a data attribute is set with a target
       if (this.elem.hasAttribute('data-hey')) {
@@ -235,21 +257,14 @@ module.exports = (() => {
         this.target.parentElement.removeChild(this.target);
       }
     },
-    // setMaxHeight() {
-    //   const wrapperStyles = getComputedStyle(this.comp.wrapper);
-    //   const headerHeight = this.comp.header.offsetHeight;
-    //
-    //   // We can't use 100vh since mobile device support causes issues
-    //   const wrapperHeight = this.comp.wrapper.offsetHeight;
-    //
-    //   this.comp.inner.style.maxHeight = `calc(${wrapperHeight}px - (${wrapperStyles.paddingTop} + ${wrapperStyles.paddingTop}) - ${headerHeight}px)`;
-    // },
     bindEvents() {
       // Check if we need to accommodate scrollbars, which changes depending on viewport
       window.addEventListener('resize', debounce(this.setScrollable.bind(this), 500));
 
-      // Update the max height
-      // window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
+      // Update the max height (if we don't have flexbox)
+      if (!this.shared.testResults.flexbox) {
+        window.addEventListener('resize', debounce(this.setMaxHeight.bind(this), 200));
+      }
 
       // Scrolling on the modal on mobile shouldn't scroll the bg
       this.comp.wrapper.addEventListener('touchmove', (e) => {
@@ -334,7 +349,7 @@ module.exports = (() => {
       }
 
       // We need to check, otherwise this will never fire in IE9
-      if (this.testResults.transitions) {
+      if (this.shared.testResults.transitions) {
         this.comp.wrapper.addEventListener('transitionend', transitionEnd.bind(this));
       }
     },
@@ -364,7 +379,7 @@ module.exports = (() => {
       };
 
       // We need to check, otherwise this will never fire in IE9
-      if (this.testResults.transitions) {
+      if (this.shared.testResults.transitions) {
         this.comp.wrapper.addEventListener('transitionend', closeOver);
       } else {
         closeOver();
@@ -378,27 +393,30 @@ module.exports = (() => {
       }
     },
     setScrollbarWidth() {
-      // Create box to measure scrollbar
-      const measure = document.createElement('div');
+      // Cache the value, since it's unlikely to change
+      if (!this.shared.scrollbarWidth) {
+        // Create box to measure scrollbar
+        const measure = document.createElement('div');
 
-      // Make sure it triggers overflow
-      measure.style.width = 100;
-      measure.style.height = 100;
-      measure.style.overflow = 'scroll';
-      measure.style.position = 'absolute';
-      measure.style.top = -9999;
+        // Make sure it triggers overflow
+        measure.style.width = 100;
+        measure.style.height = 100;
+        measure.style.overflow = 'scroll';
+        measure.style.position = 'absolute';
+        measure.style.top = -9999;
 
-      // Add the measure element
-      this.body.appendChild(measure);
+        // Add the measure element
+        this.body.appendChild(measure);
 
-      // Measure the difference between with/without the scrollbar
-      const width = measure.offsetWidth - measure.clientWidth;
+        // Measure the difference between with/without the scrollbar
+        const width = measure.offsetWidth - measure.clientWidth;
 
-      // Remove from DOM
-      this.body.removeChild(measure);
+        // Remove from DOM
+        this.body.removeChild(measure);
 
-      // Update our best guess at the width
-      this.shared.scrollbarWidth = width;
+        // Update our best guess at the width
+        this.shared.scrollbarWidth = width;
+      }
     },
   };
 
