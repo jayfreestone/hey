@@ -1,12 +1,12 @@
 // Avoid ES6 imports until this is solved:
 // https://github.com/webpack/webpack/issues/3929
-require('custom-event-polyfill');
-require('core-js/fn/object/assign');
+import 'custom-event-polyfill';
+import 'core-js/fn/object/assign';
 // require('classlist.js');
-const merge = require('lodash/merge');
-const debounce = require('lodash/debounce');
+import merge from 'lodash/merge';
+import debounce from 'lodash/debounce';
 
-module.exports = (() => {
+const heyModal = (() => {
   let id = 0;
 
   const defaultOptions = {
@@ -439,3 +439,5 @@ module.exports = (() => {
     return newModal;
   };
 })();
+
+export default heyModal;
