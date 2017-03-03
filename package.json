@@ -9,6 +9,7 @@
   "author": "Jay Freestone <mail@jayfreestone.com>",
   "license": "MIT",
   "scripts": {
+    "precommit": "npm run build",
     "build": "npm run build:css && npm run build:js && npm run build:images",
     "build:images": "imagemin src/img/* -o dist/img",
     "build:css": "node-sass --output-style compressed -o dist/css src/sass/ && postcss -u autoprefixer -r dist/css/*.css",
@@ -30,6 +31,7 @@
     "core-js": "zloirock/core-js",
     "custom-event-polyfill": "^0.3.0",
     "debug": "^2.6.1",
+    "husky": "^0.13.2",
     "imagemin-cli": "^3.0.0",
     "lodash": "^4.17.4",
     "node-sass": "^4.4.0",
