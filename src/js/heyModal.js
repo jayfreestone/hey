@@ -1,5 +1,3 @@
-// Avoid ES6 imports until this is solved:
-// https://github.com/webpack/webpack/issues/3929
 import 'custom-event-polyfill';
 import 'core-js/fn/object/assign';
 // require('classlist.js');

@@ -13,12 +13,13 @@
     "build:images": "imagemin src/img/* -o dist/img",
     "build:css": "node-sass --output-style compressed -o dist/css src/sass/ && postcss -u autoprefixer -r dist/css/*.css",
     "build:js": "NODE_ENV=production ./node_modules/.bin/rollup -c",
-    "buildDev:js": "NODE_ENV=production ./node_modules/.bin/rollup -c",
-    "watch": "npm run build && browser-sync start --server --files 'dist/css/*.css, dist/js/*.js'",
-    "watch:all": "parallelshell 'npm run serve' 'npm run watch:css' 'npm run watch:js'",
+    "buildDev:js": "./node_modules/.bin/rollup -c",
+    "watch": "parallelshell 'npm run build' 'npm run watch:all' 'npm run browsersync'",
+    "browsersync": "browser-sync start --server --files 'dist/js/*.js, dist/css/*.css'",
+    "watch:all": "parallelshell 'npm run watch:images' 'npm run watch:css' 'npm run watch:js'",
     "watch:images": "onchange 'src/img/*' -- npm run build:images",
     "watch:css": "onchange 'src/sass/*.scss' -- npm run build:css",
-    "watch:js": "onchange 'src/js/*.js' -- npm run buildDev:js"
+    "watch:js": "./node_modules/.bin/rollup -c -w"
   },
   "dependencies": {
     "autoprefixer": "^6.7.6",
@@ -40,7 +41,8 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-uglify": "^1.0.1"
+    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^3.2.2"
   },
   "devDependencies": {
     "eslint": "^3.12.2",
