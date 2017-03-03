@@ -9,7 +9,7 @@
   "author": "Jay Freestone <mail@jayfreestone.com>",
   "license": "MIT",
   "scripts": {
-    "precommit": "npm run build",
+    "precommit": "npm run build && git add dist",
     "build": "npm run build:css && npm run build:js && npm run build:images",
     "build:images": "imagemin src/img/* -o dist/img",
     "build:css": "node-sass --output-style compressed -o dist/css src/sass/ && postcss -u autoprefixer -r dist/css/*.css",
