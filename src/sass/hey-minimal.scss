@@ -1,0 +1,17 @@
+.modal {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal__dialog {
+  border-radius: 0.3rem;
+  max-width: 40rem;
+}
+
+.modal__close {
+  width: 0.9rem;
+  height: 0.9rem;
+  background-image: url('../img/cross.svg');
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}

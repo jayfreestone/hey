@@ -1,13 +1,24 @@
 import 'custom-event-polyfill';
-import 'core-js/fn/object/assign';
 // require('classlist.js');
-import merge from 'lodash/merge';
-import debounce from 'lodash/debounce';
+import merge from 'assignment';
+
+// Debounce
+// https://gist.github.com/beaucharman/1f93fdd7c72860736643d1ab274fee1a
+function debounce(callback, wait, context = this) {
+  let timeout = null;
+  let callbackArgs = null;
+
+  const later = () => callback.apply(context, callbackArgs);
+
+  return (...args) => {
+    callbackArgs = args;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 const heyModal = (() => {
   let id = 0;
-
-  console.log(document.querySelector('html').style.width);
 
   const defaultOptions = {
     classes: {
@@ -146,6 +157,7 @@ const heyModal = (() => {
 
       // Close button
       c.closeBtn = document.createElement('button');
+      c.closeBtn.innerHTML = 'Close';
       c.closeBtn.classList.add(...classes.modalClose);
       c.closeBtn.setAttribute('type', 'button');
       c.closeBtn.setAttribute('aria-label', 'Close');
@@ -437,7 +449,7 @@ const heyModal = (() => {
     const options = merge({}, defaultOptions, customOptions);
 
     // Create a new modal object
-    const newModal = Object.assign(Object.create(heyModalProto), {
+    const newModal = merge(Object.create(heyModalProto), {
       elem,
     }, { options });
 

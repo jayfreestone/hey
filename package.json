@@ -23,17 +23,16 @@
     "watch:js": "./node_modules/.bin/rollup -c -w"
   },
   "dependencies": {
+    "assignment": "^2.2.1",
     "autoprefixer": "^6.7.6",
     "babel-core": "^6.22.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "browser-sync": "^2.18.8",
     "classlist.js": "^1.1.20150312",
-    "core-js": "zloirock/core-js",
     "custom-event-polyfill": "^0.3.0",
     "debug": "^2.6.1",
     "husky": "^0.13.2",
     "imagemin-cli": "^3.0.0",
-    "lodash": "^4.17.4",
     "node-sass": "^4.4.0",
     "normalize.css": "^5.0.0",
     "onchange": "^3.2.1",
