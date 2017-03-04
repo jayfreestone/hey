@@ -7,6 +7,8 @@ import debounce from 'lodash/debounce';
 const heyModal = (() => {
   let id = 0;
 
+  console.log(document.querySelector('html').style.width);
+
   const defaultOptions = {
     classes: {
       modal: ['modal'],
@@ -329,7 +331,16 @@ const heyModal = (() => {
       });
     },
     setScrollable() {
-      this.shared.isScrollable = document.body.offsetHeight > window.innerHeight;
+      // Is the document taller than the viewport?
+      const isScrollable = document.body.offsetHeight > window.innerHeight;
+
+      // This is for IE10, which will overlay scrollbars (depending on @-ms-viewport).
+      // We test to see if the visible area is equal to the client width - if it is,
+      // the scrollbar is probably overlaid, so we shouldn't set the value to scrollable
+      // or we'll actually *create* a shift, instead of preventing it.
+      const scrollOverlaid = document.documentElement.clientWidth === window.innerWidth;
+
+      this.shared.isScrollable = isScrollable && !scrollOverlaid;
     },
     open() {
       this.comp.wrapper.classList.add(...this.options.classes.visibleClass);
