@@ -16,6 +16,41 @@ There are loads of great modals out there, such as [Modaal](http://www.humaan.co
 
 However most don't address the little UI annoyances that plague modals, such as the 'scrollbar shift' when applying `overflow: hidden` to body.
 
+### Browser Support
+
+Supports all recent versions of major browsers  out of the box (IE10 and up). IE9 support requires a [classList](https://github.com/eligrey/classList.js/) polyfill.
+
+## Installation
+
+Install hey via NPM/Yarn:
+
+	// Yarn
+    yarn add hey.js
+	// NPM
+	npm install --save hey.js
+
+You can include hey via a module bundler, such as [Webpack](https://webpack.github.io/):
+
+	// JS
+	import hey from 'hey.js';
+
+Or just include the script directly:
+
+	<!-- HTML -->
+    <script src="myPath/js/heyModal.min.js"></script>
+
+You'll also need to include the base stylesheet, and optionally a theme. You can import them as part of your build process:
+
+	// SASS
+	@import '../../node_modules/hey.js/dist/css/hey.css';
+	@import '../../node_modules/hey.js/dist/css/hey-minimal.css';
+
+Or include them directly:
+
+	<!-- HTML -->
+    <link rel="stylesheet" href="myPath/css/hey.css">
+    <link rel="stylesheet" href="myPath/css/hey-minimal.css">
+
 ## How to use
 
 All below methods require manual initialization by passing in the trigger (link/button), like so:
@@ -137,8 +172,8 @@ Closes the modal manually:
     
     myModal.close();
     
-### Destroy
-Removes the modal and cleans up (TODO):
+### Destroy (TODO)
+Removes the modal and cleans up:
     
     myModal.destroy();
     
