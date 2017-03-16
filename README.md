@@ -191,3 +191,9 @@ Or you can use the included `.on` helper method, which defaults to the `wrapper`
     myModal.on('heyOpen', () => {
         console.log('opening!');
     });
+
+## Theming
+
+The essential 'base' styles are in `hey.css`. These should be included first and overridden as necessary.
+
+It's worth noting that the modal close event, which is responsible for firing events and mitigating shifting scrollbars, happens when the transition is finished on the `.modal` element. This means if the dialog has a separate transition, it should finish *before* the main modal's transition ends. If this isn't the case, the dialog will animate during (or after the scrollbar change), which will cause an unnecessary shift.
