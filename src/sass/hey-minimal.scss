@@ -1,8 +1,13 @@
+/**
+ * Minimal theme
+ */
+
 .modal {
   background: rgba(0, 0, 0, 0.8);
 }
 
 .modal__dialog {
+  border: 0;
   border-radius: 0.3rem;
   max-width: 40rem;
 }
@@ -14,4 +19,9 @@
   background-color: transparent;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+
+.modal__close-text {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
 }

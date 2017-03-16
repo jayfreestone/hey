@@ -28,7 +28,6 @@
     "babel-core": "^6.22.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "browser-sync": "^2.18.8",
-    "classlist.js": "^1.1.20150312",
     "custom-event-polyfill": "^0.3.0",
     "debug": "^2.6.1",
     "husky": "^0.13.2",

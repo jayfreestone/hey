@@ -1,5 +1,4 @@
 import 'custom-event-polyfill';
-// require('classlist.js');
 import merge from 'assignment';
 
 // Debounce
@@ -28,6 +27,7 @@ const heyModal = (() => {
       modalBody: ['modal__body'],
       modalContent: ['modal__content'],
       modalClose: ['modal__close'],
+      modalCloseBtnText: ['modal__close-text'],
       modalTitle: ['modal__title'],
       confirm: ['modal__confirm'],
       confirmYes: ['btn', 'btn--positive'],
@@ -157,10 +157,13 @@ const heyModal = (() => {
 
       // Close button
       c.closeBtn = document.createElement('button');
-      c.closeBtn.innerHTML = 'Close';
       c.closeBtn.classList.add(...classes.modalClose);
       c.closeBtn.setAttribute('type', 'button');
       c.closeBtn.setAttribute('aria-label', 'Close');
+      c.closeText = document.createElement('span');
+      c.closeText.classList.add(...classes.modalCloseBtnText);
+      c.closeText.innerHTML = 'Close';
+      c.closeBtn.appendChild(c.closeText);
 
       // Add confirm buttons
       if (this.confirm) {
