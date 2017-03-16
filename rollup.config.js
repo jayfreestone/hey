@@ -6,7 +6,7 @@ import uglify from 'rollup-plugin-uglify';
 export default {
   entry: 'src/js/heyModal.js',
   dest: 'dist/js/heyModal.min.js',
-  format: 'iife',
+  format: 'umd',
   sourceMap: (process.env.NODE_ENV === 'production' ? false : 'inline'),
   moduleName: 'heyModal',
   plugins: [
