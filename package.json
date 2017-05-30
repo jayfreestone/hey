@@ -1,6 +1,6 @@
 {
   "name": "hey.js",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "main": "dist/js/heyModal.min.js",
   "repository": {
     "url": "git@github.com:jayfreestone/hey.git",
