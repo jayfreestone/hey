@@ -127,7 +127,7 @@ const heyModal = (() => {
 
       // Wrapper
       c.wrapper = document.createElement('div');
-      c.wrapper.classList.add('modal');
+      c.wrapper.classList.add(...classes.modal);
       c.wrapper.setAttribute('aria-hidden', 'true');
 
       // Dialog
