@@ -298,12 +298,11 @@ const heyModal = (() => {
       });
 
       // Close events on wrapper/close button
-      this.comp.wrapper.addEventListener('click', this.close.bind(this));
       this.comp.closeBtn.addEventListener('click', this.close.bind(this));
-
-      // Clicking inner modal components shouldn't close the modal
-      this.comp.dialog.addEventListener('click', (e) => {
-        e.stopPropagation();
+      this.comp.wrapper.addEventListener('click', (e) => {
+        if (e.target.classList.contains(this.options.classes.modal.join(' '))) {
+          this.close();
+        }
       });
 
       const userCloseBtn = this.comp.dialog.querySelector('[data-hey-close]');
