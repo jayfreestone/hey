@@ -41,6 +41,7 @@ const heyModal = (() => {
     options: defaultOptions,
     body: null,
     elem: null,
+    onClick: null,
     target: null,
     confirm: false,
     events: {
@@ -172,8 +173,23 @@ const heyModal = (() => {
 
         c.confirmYes = document.createElement('a');
         c.confirmYes.innerHTML = 'Proceed';
-        c.confirmYes.setAttribute('href', this.elem.getAttribute('href'));
         c.confirmYes.classList.add(...classes.confirmYes);
+        if (this.elem.nodeName === 'A') {
+          // If <a> simply copy the href to the confirm link
+          c.confirmYes.setAttribute('href', this.elem.getAttribute('href'));
+        } else {
+          // Otherwise when the confirm link is clicked: remove the modal
+          // listener, fire this.elem’s click event, then re-add the listener
+          // and close the modal
+          c.confirmYes.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.elem.removeEventListener('click', this.onClick);
+            this.elem.click();
+            this.elem.addEventListener('click', this.onClick);
+            this.close();
+          });
+          c.confirmYes.setAttribute('href', '#');
+        }
 
         c.confirmCancel = document.createElement('button');
         c.confirmCancel.innerHTML = 'Cancel';
@@ -292,10 +308,11 @@ const heyModal = (() => {
       }, false);
 
       // Open on target click
-      this.elem.addEventListener('click', (e) => {
+      this.onClick = (e) => {
         e.preventDefault();
         this.open();
-      });
+      };
+      this.elem.addEventListener('click', this.onClick);
 
       // Close events on wrapper/close button
       this.comp.closeBtn.addEventListener('click', this.close.bind(this));
