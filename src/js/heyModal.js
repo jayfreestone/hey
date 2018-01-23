@@ -171,25 +171,16 @@ const heyModal = (() => {
         c.confirm = document.createElement('div');
         c.confirm.classList.add(...classes.confirm);
 
-        c.confirmYes = document.createElement('a');
-        c.confirmYes.innerHTML = 'Proceed';
-        c.confirmYes.classList.add(...classes.confirmYes);
-        if (this.elem.nodeName === 'A') {
+        if (this.isLink()) {
+          c.confirmYes = document.createElement('a');
           // If <a> simply copy the href to the confirm link
           c.confirmYes.setAttribute('href', this.elem.getAttribute('href'));
         } else {
-          // Otherwise when the confirm link is clicked: remove the modal
-          // listener, fire this.elem’s click event, then re-add the listener
-          // and close the modal
-          c.confirmYes.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.elem.removeEventListener('click', this.onClick);
-            this.elem.click();
-            this.elem.addEventListener('click', this.onClick);
-            this.close();
-          });
-          c.confirmYes.setAttribute('href', '#');
+          c.confirmYes = document.createElement('button');
         }
+
+        c.confirmYes.innerHTML = 'Proceed';
+        c.confirmYes.classList.add(...classes.confirmYes);
 
         c.confirmCancel = document.createElement('button');
         c.confirmCancel.innerHTML = 'Cancel';
@@ -282,6 +273,9 @@ const heyModal = (() => {
 
       return hasTarget;
     },
+    isLink() {
+     return this.elem.nodeName === 'A';
+    },
     // Remove the original target
     removeTarget() {
       if (this.target) {
@@ -328,6 +322,19 @@ const heyModal = (() => {
         // Allow a user to assign a close button inside the body with [data-hey-close]
         userCloseBtn.addEventListener('click', (e) => {
           e.preventDefault();
+          this.close();
+        });
+      }
+
+      if (this.confirm && !this.isLink()) {
+        // When the confirm link is clicked: remove the modal
+        // listener, fire this.elem’s click event, then re-add the listener
+        // and close the modal
+        this.comp.confirmYes.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.elem.removeEventListener('click', this.onClick);
+          this.elem.click();
+          this.elem.addEventListener('click', this.onClick);
           this.close();
         });
       }
