@@ -1,4 +1,4 @@
-# :wave: hey.js
+# :wave: hey.js [DEPRECATED]
 
 hey.js is a simple dependency-free modal written in JavaScript.
 
